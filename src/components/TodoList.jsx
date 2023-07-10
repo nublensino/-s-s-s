@@ -1,7 +1,9 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 
 import { TodoItem } from "./Todoitem";
+
+import {v4 as uuid} from "uuid";
 
 export function Todolist(){
 
@@ -21,6 +23,39 @@ export function Todolist(){
 
     ]);
 
+    
+
+    const tareaRef = useRef();
+
+
+
+    const agregarTarea = () =>{
+        //alert("Agregando tarea....")
+
+        const tarea = tareaRef.current.value;
+        //alert(tarea);         
+        const id = uuid();
+        //alert(id);
+
+        setTodos ((prevTodos) =>{
+                const nuevaTarea = {
+                    id:uuid(),
+                    tarea: tarea
+                }
+
+                //3 PUNTITOS : TOMO EL ARREGLO NUEVO Y LO DESCOMPONGO
+                //Y CON EL RETURN TOMO EL ARREGLO ANTIGUO Y LE SUMO LA TEREA NUEVA
+                //RESULTANDO UN ARREGLO
+                tareaRef.current.value = "";
+                return [...prevTodos, nuevaTarea]
+        })
+
+
+
+    }
+
+
+
 
 
 
@@ -37,15 +72,15 @@ export function Todolist(){
                          <h1>Listado de Tareas</h1> 
 
                     <div className="input-group nt-4 mb-4">
-                        <input placeholder="Ingrese una tarea " className="form-control" type="text"></input>
-                        <button className="btn btn-success ns-2"></button>
+                        <input ref={tareaRef} placeholder="Ingrese una tarea " className="form-control" type="text"></input>
+                        <button onClick={agregarTarea} className="btn btn-success ns-2"></button>
 
                     </div>
 
                         
                        <ul className="list-group">
                         {todos.map((todo) => (
-                            <TodoItem todo={todo}></TodoItem>
+                            <TodoItem todo={todo} key={todo.id}></TodoItem>
 
                         ))}
                     
